@@ -10,6 +10,8 @@ buildscript {
     ext.espresso_version = "3.3.0"
     ext.test_junit_version = "1.1.2"
     ext.nav_version = "2.3.2"
+    ext.retrofit_version = "2.9.0"
+    ext.ok_http_version = "4.9.0"
 
 
     repositories {
