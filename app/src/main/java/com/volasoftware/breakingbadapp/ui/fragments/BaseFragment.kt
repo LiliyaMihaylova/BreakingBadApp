@@ -26,11 +26,14 @@ abstract class BaseFragment<T : ViewDataBinding, L> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onFragmentViewCreated(view, savedInstanceState)
+        setupToolbar()
     }
 
     protected abstract fun onFragmentViewCreated(view: View, savedInstanceState: Bundle?)
 
     protected abstract fun getLayoutRes(): Int
+
+    protected abstract fun setupToolbar()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

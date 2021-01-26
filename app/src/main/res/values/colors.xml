@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="light_grey">#BABABA</color>
+
+    <color name="red">#a10202</color>
+    <color name="dark_red">#990202</color>
 </resources>
