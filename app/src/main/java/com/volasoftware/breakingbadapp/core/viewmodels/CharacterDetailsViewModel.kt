@@ -1,4 +1,4 @@
-package com.volasoftware.breakingbadapp.ui.viewmodels
+package com.volasoftware.breakingbadapp.core.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

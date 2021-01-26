@@ -2,7 +2,7 @@ package com.volasoftware.breakingbadapp.networking.models
 
 import com.google.gson.annotations.SerializedName
 
-class CharactersResponse(
+class Character(
     @SerializedName("char_id") val charId: Int,
     @SerializedName("name") val name: String,
     @SerializedName("birthday") val birthday: String,

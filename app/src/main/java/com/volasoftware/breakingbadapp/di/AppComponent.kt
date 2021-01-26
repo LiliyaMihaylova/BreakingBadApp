@@ -2,10 +2,7 @@ package com.volasoftware.breakingbadapp.di
 
 import android.app.Application
 import com.volasoftware.breakingbadapp.BreakingBadApp
-import com.volasoftware.breakingbadapp.di.modules.ActivitiesModule
-import com.volasoftware.breakingbadapp.di.modules.DataModule
-import com.volasoftware.breakingbadapp.di.modules.FragmentsModule
-import com.volasoftware.breakingbadapp.di.modules.ViewModelModule
+import com.volasoftware.breakingbadapp.di.modules.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -18,6 +15,7 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         AndroidInjectionModule::class,
         DataModule::class,
+        RepositoryModule::class,
         ViewModelModule::class,
         FragmentsModule::class,
         ActivitiesModule::class]
