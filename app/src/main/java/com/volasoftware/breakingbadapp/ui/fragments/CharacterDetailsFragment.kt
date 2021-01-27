@@ -17,5 +17,9 @@ class CharacterDetailsFragment :
         return R.layout.fragment_character_details
     }
 
+    override fun setupToolbar() {
+
+    }
+
     interface CharacterDetailsFragmentListener {}
 }
