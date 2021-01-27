@@ -19,6 +19,11 @@
         android:id="@+id/characterDetailsFragment"
         android:name="com.volasoftware.breakingbadapp.ui.fragments.CharacterDetailsFragment"
         android:label="CharacterDetailsFragment"
-        tools:layout="@layout/fragment_character_details" />
+        tools:layout="@layout/fragment_character_details">
+        <argument
+            android:name="character"
+            app:argType="com.volasoftware.breakingbadapp.networking.models.Character"
+            app:nullable="false" />
+    </fragment>
 
 </navigation>
