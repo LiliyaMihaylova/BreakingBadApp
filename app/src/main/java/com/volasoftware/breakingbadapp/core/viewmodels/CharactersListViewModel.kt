@@ -1,7 +1,6 @@
 package com.volasoftware.breakingbadapp.core.viewmodels
 
 import android.app.Application
-import android.widget.CheckBox
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,9 +20,9 @@ class CharactersListViewModel @Inject constructor(
     }
 
     fun filteringList(
-        seasons: List<Pair<Int, CheckBox>>, characters: List<Character>, searchQuery: String
+        checkedItems: List<Int>, characters: List<Character>, searchQuery: String
     ): MutableLiveData<List<Character>> {
-        val checkedItems = seasons.filter { season -> season.second.isChecked }.map { it.first }
+
         val notNullCharacters = characters.filter { it.appearances != null }
         filteredCharactersLiveData.postValue(
             notNullCharacters.filter { character ->

@@ -26,11 +26,16 @@ class CharactersViewHolder(
         Picasso.get()
             .load(url)
             .resize(
-                PixelConverter.dpToPx(72),
-                PixelConverter.dpToPx(96)
+                PixelConverter.dpToPx(WIDTH),
+                PixelConverter.dpToPx(HEIGHT)
             )
             .placeholder(R.drawable.ic_person_placeholder)
             .error(R.drawable.ic_person_placeholder)
             .into(binding.imgCharacter)
+    }
+
+    companion object {
+        private const val WIDTH = 72
+        private const val HEIGHT = 96
     }
 }

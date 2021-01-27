@@ -29,6 +29,7 @@ class CharactersListFragment :
     @Inject
     lateinit var viewModel: CharactersListViewModel
 
+
     override fun onFragmentViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRecyclerView()
         loadCharacters()
@@ -48,6 +49,8 @@ class CharactersListFragment :
         viewModel.getCharacters().observe(viewLifecycleOwner) {
             characters = it as MutableList<Character>
             adapter.setItems(it)
+            seasons.clear()
+            binding.checkBoxesContainer.removeAllViews()
             generateSeasonCheckBoxes()
         }
     }
@@ -92,30 +95,33 @@ class CharactersListFragment :
     }
 
     private fun generateSeasonCheckBoxes() {
-        val character = characters.maxByOrNull { it.appearances?.size ?: 0 }
-        val seasonsSize: Int = character?.appearances?.size ?: 0
-        for (i in 0 until seasonsSize) {
+        val seasonsSize =
+            characters.mapNotNull { it.appearances?.toList() }.flatten().distinct().sorted()
+        for (i in seasonsSize) {
             val checkBox = CheckBox(context)
-            checkBox.text = character?.appearances?.get(i).toString()
+            checkBox.text = i.toString()
             checkBox.id = i
 
             checkBox.setOnCheckedChangeListener { view, isChecked ->
                 seasons[view.id] = view.id to checkBox
+                seasons[view.id].second.isChecked = isChecked
                 filteringList()
             }
             checkBox.setPadding(
                 0,
-                PixelConverter.dpToPx(16),
-                PixelConverter.dpToPx(16),
-                PixelConverter.dpToPx(16)
+                PixelConverter.dpToPx(DEFAULT_PADDING),
+                PixelConverter.dpToPx(DEFAULT_PADDING),
+                PixelConverter.dpToPx(DEFAULT_PADDING)
             )
-            seasons.add(i to checkBox)
+
+            if (seasons.size < seasonsSize.size) seasons.add(i to checkBox)
             binding.checkBoxesContainer.addView(checkBox)
         }
     }
 
     private fun filteringList() {
-        viewModel.filteringList(seasons, characters, searchQuery).observe(viewLifecycleOwner) {
+        val checkedItems = seasons.filter { season -> season.second.isChecked }.map { it.first }
+        viewModel.filteringList(checkedItems, characters, searchQuery).observe(viewLifecycleOwner) {
             adapter.setItems(it)
         }
     }
@@ -126,6 +132,10 @@ class CharactersListFragment :
                 item
             )
         )
+    }
+
+    companion object {
+        private const val DEFAULT_PADDING = 16
     }
 
     interface CharactersListFragmentListener
