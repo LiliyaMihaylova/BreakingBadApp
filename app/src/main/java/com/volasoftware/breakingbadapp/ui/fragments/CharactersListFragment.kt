@@ -2,7 +2,9 @@ package com.volasoftware.breakingbadapp.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.CheckBox
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volasoftware.breakingbadapp.R
@@ -11,6 +13,7 @@ import com.volasoftware.breakingbadapp.databinding.FragmentCharactersListBinding
 import com.volasoftware.breakingbadapp.networking.models.Character
 import com.volasoftware.breakingbadapp.ui.adapters.characters.CharactersAdapter
 import com.volasoftware.breakingbadapp.ui.adapters.characters.OnItemSelectListener
+import com.volasoftware.breakingbadapp.utils.PixelConverter
 import javax.inject.Inject
 
 
@@ -20,6 +23,8 @@ class CharactersListFragment :
 
     private lateinit var adapter: CharactersAdapter
     private var characters = mutableListOf<Character>()
+    private var seasons = mutableListOf<Pair<Int, CheckBox>>()
+    private var searchQuery: String = ""
 
     @Inject
     lateinit var viewModel: CharactersListViewModel
@@ -43,11 +48,13 @@ class CharactersListFragment :
         viewModel.getCharacters().observe(viewLifecycleOwner) {
             characters = it as MutableList<Character>
             adapter.setItems(it)
+            generateSeasonCheckBoxes()
         }
     }
 
     override fun setupToolbar() {
         setupSearchView()
+        setupFilterView()
     }
 
     private fun setupSearchView() {
@@ -58,7 +65,8 @@ class CharactersListFragment :
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                adapter.setItems(characters.filter { it.name.contains(query, true) })
+                searchQuery = query
+                filterList()
                 return false
             }
         })
@@ -73,7 +81,52 @@ class CharactersListFragment :
         }
     }
 
+    private fun setupFilterView() {
+        binding.searchToolbar.btnFilterList.setOnClickListener {
+            if (binding.checkBoxesContainer.isVisible) {
+                binding.checkBoxesContainer.visibility = View.GONE
+            } else {
+                binding.checkBoxesContainer.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun generateSeasonCheckBoxes() {
+        val character = characters.maxByOrNull { it.appearances?.size ?: 0 }
+        val seasonsSize: Int = character?.appearances?.size ?: 0
+        for (i in 0 until seasonsSize) {
+            val checkBox = CheckBox(context)
+            checkBox.text = character?.appearances?.get(i).toString()
+            checkBox.id = i
+
+            checkBox.setOnCheckedChangeListener { view, isChecked ->
+                seasons[view.id] = view.id to checkBox
+                filterList()
+            }
+            checkBox.setPadding(
+                0,
+                PixelConverter.dpToPx(16),
+                PixelConverter.dpToPx(16),
+                PixelConverter.dpToPx(16)
+            )
+            seasons.add(i to checkBox)
+            binding.checkBoxesContainer.addView(checkBox)
+        }
+    }
+
+    private fun filterList() {
+        val checkedItems = seasons.filter { season -> season.second.isChecked }.map { it.first }
+        val notNullCharacters = characters.filter { !it.appearances.isNullOrEmpty() }
+        val filteredList =
+            notNullCharacters.filter { character ->
+                checkedItems.all {
+                    character.appearances!!.contains(it + 1)
+                } && character.name.contains(searchQuery, true)
+            }
+        adapter.setItems(filteredList)
+    }
+
     override fun onItemSelected(item: Character) {}
 
-    interface CharactersListFragmentListener {}
+    interface CharactersListFragmentListener
 }

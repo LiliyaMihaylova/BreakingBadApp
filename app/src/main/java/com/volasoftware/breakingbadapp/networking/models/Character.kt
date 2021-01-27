@@ -10,7 +10,7 @@ class Character(
     @SerializedName("img") val img: String,
     @SerializedName("status") val status: String,
     @SerializedName("nickname") val nickname: String,
-    @SerializedName("appearance") val appearances: List<Int>,
+    @SerializedName("appearance") val appearances: List<Int>?,
     @SerializedName("portrayed") val portrayed: String,
     @SerializedName("category") val category: String,
     @SerializedName("better_call_saul_appearance") val betterCallSaulAppearances: List<Int>
