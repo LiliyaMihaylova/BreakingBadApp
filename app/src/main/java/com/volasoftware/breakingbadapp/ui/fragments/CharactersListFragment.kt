@@ -66,17 +66,17 @@ class CharactersListFragment :
 
             override fun onQueryTextChange(query: String): Boolean {
                 searchQuery = query
-                filterList()
+                filteringList()
                 return false
             }
         })
 
         binding.searchToolbar.searchView.setOnSearchClickListener {
-            binding.searchToolbar.txtToolbarTitle.visibility = View.GONE
+            binding.searchToolbar.txtSearchToolbarTitle.visibility = View.GONE
         }
 
         binding.searchToolbar.searchView.setOnCloseListener {
-            binding.searchToolbar.txtToolbarTitle.visibility = View.VISIBLE
+            binding.searchToolbar.txtSearchToolbarTitle.visibility = View.VISIBLE
             false
         }
     }
@@ -101,7 +101,7 @@ class CharactersListFragment :
 
             checkBox.setOnCheckedChangeListener { view, isChecked ->
                 seasons[view.id] = view.id to checkBox
-                filterList()
+                filteringList()
             }
             checkBox.setPadding(
                 0,
@@ -114,19 +114,19 @@ class CharactersListFragment :
         }
     }
 
-    private fun filterList() {
-        val checkedItems = seasons.filter { season -> season.second.isChecked }.map { it.first }
-        val notNullCharacters = characters.filter { !it.appearances.isNullOrEmpty() }
-        val filteredList =
-            notNullCharacters.filter { character ->
-                checkedItems.all {
-                    character.appearances!!.contains(it + 1)
-                } && character.name.contains(searchQuery, true)
-            }
-        adapter.setItems(filteredList)
+    private fun filteringList() {
+        viewModel.filteringList(seasons, characters, searchQuery).observe(viewLifecycleOwner) {
+            adapter.setItems(it)
+        }
     }
 
-    override fun onItemSelected(item: Character) {}
+    override fun onItemSelected(item: Character) {
+        navigateTo(
+            action = CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailsFragment(
+                item
+            )
+        )
+    }
 
     interface CharactersListFragmentListener
 }
