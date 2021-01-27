@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">BreakingBadApp</string>
+
+    <string name="search_here">Search Here</string>
+    <string name="name">Name:</string>
+    <string name="occupation">Occupation:</string>
+    <string name="status">Status:</string>
+    <string name="nickname">Nickname:</string>
+    <string name="season_appearence">Season appearance:</string>
 </resources>
